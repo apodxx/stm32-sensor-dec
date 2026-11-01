@@ -1,0 +1,18 @@
+# 统一换行符，避免 Windows/Linux 协作出 diff 噪音
+* text=auto eol=lf
+
+*.c    text eol=lf
+*.h    text eol=lf
+*.s    text eol=lf
+*.md   text eol=lf
+*.txt  text eol=lf
+*.cmake text eol=lf
+CMakeLists.txt text eol=lf
+
+# 二进制文件不做转换
+*.hex  binary
+*.bin  binary
+*.elf  binary
+*.pdf  binary
+*.png  binary
+*.jpg  binary

@@ -1,0 +1,33 @@
+# 构建产物
+build/
+Debug/
+Release/
+*.o
+*.d
+*.elf
+*.hex
+*.bin
+*.map
+*.su
+*.list
+objects.list
+objects.mk
+makefile
+*.launch
+
+# IDE / 编辑器
+.vs/
+.settings/
+*.user
+*.log
+
+# 系统文件
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# 保留
+!Core/**
+!Drivers/**
+!cmake/**
+!docs/**
