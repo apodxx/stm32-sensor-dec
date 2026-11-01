@@ -125,6 +125,14 @@ $env:PATH = "C:\ST\STM32CubeIDE_1.x.x\STM32CubeIDE\plugins\com.st.stm32cube.ide.
 
 正常占用约 **44KB Flash / 5KB RAM**（64KB / 20KB 上限）。
 
+> **报错 `CMake was unable to find a build program corresponding to "Ninja"`**：
+> 说明 PATH 里没有 ninja。CubeIDE 自带的那份在
+> `...\plugins\com.st.stm32cube.ide.mcu.externaltools.ninja.*\tools\bin`，把它加进 PATH 即可；
+> 或者在配置时显式指定：
+> ```bash
+> cmake --preset debug -DCMAKE_MAKE_PROGRAM="<ninja 的完整路径>"
+> ```
+
 ### 3.2 CubeIDE 编译
 
 导入工程后直接 `Project → Build All`，产物在 `Debug/` 目录。
