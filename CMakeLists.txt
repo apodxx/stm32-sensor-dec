@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 
-project("stm32_hal_ssd1306" C CXX ASM)
+project("stm32_sensor_deck" C CXX ASM)
 
 include(cmake/st-project.cmake)
 

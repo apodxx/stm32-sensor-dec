@@ -16,7 +16,7 @@
       "stopAtConnect": true,
       "postRemoteConnectCommands": [
         {
-          "text": "load build/debug/build/stm32_hal_ssd1306.elf"
+          "text": "load build/debug/build/stm32_sensor_deck.elf"
         }
       ],
       "logging": {

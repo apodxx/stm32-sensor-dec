@@ -1,4 +1,4 @@
-# 从零开始：用 STM32F103 做一个多传感器监测台
+# STM32 SensorDeck 教程：从零搭建多传感器监测台
 
 > 这份教程带你从"一块 Blue Pill + 一块 OLED"开始，一步步加上心率血氧、温湿度、光照、六轴、转速、舵机、蜂鸣器和旋钮，最后调成一个可以旋钮切页的小仪表台。
 >
@@ -97,8 +97,8 @@
 ## 3. 获取代码并编译
 
 ```bash
-git clone https://github.com/<你的用户名>/stm32_hal_ssd1306.git
-cd stm32_hal_ssd1306
+git clone https://github.com/<你的用户名>/stm32-sensor-deck.git
+cd stm32-sensor-deck
 ```
 
 ### 3.1 命令行编译
@@ -119,9 +119,9 @@ $env:PATH = "C:\ST\STM32CubeIDE_1.x.x\STM32CubeIDE\plugins\com.st.stm32cube.ide.
 
 | 文件 | 用途 |
 |---|---|
-| `stm32_hal_ssd1306.hex` | 烧录用 |
-| `stm32_hal_ssd1306.bin` | 其他工具用 |
-| `stm32_hal_ssd1306.elf` | 调试用 |
+| `stm32_sensor_deck.hex` | 烧录用 |
+| `stm32_sensor_deck.bin` | 其他工具用 |
+| `stm32_sensor_deck.elf` | 调试用 |
 
 正常占用约 **44KB Flash / 5KB RAM**（64KB / 20KB 上限）。
 
@@ -156,7 +156,7 @@ BOOT0 跳线保持 0。
 
 ### 4.2 烧录
 
-ST-Link Utility / CubeProgrammer 打开 `stm32_hal_ssd1306.hex` → Connect → Program → 复位。
+ST-Link Utility / CubeProgrammer 打开 `stm32_sensor_deck.hex` → Connect → Program → 复位。
 
 ### 4.3 第一次上电应该看到
 
@@ -583,7 +583,7 @@ cmake --build build/debug/build
 ### 10.1 首次提交
 
 ```bash
-cd stm32_hal_ssd1306
+cd stm32-sensor-deck
 
 git init
 git add .

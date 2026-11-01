@@ -1,6 +1,6 @@
-# STM32F103 + SSD1306 健康监测 / 环境监测
+# STM32 SensorDeck
 
-基于 STM32F103C8T6（Blue Pill）的 HAL 工程：0.96" I2C OLED 显示、MAX30102 心率血氧、DHT11 温湿度、GL5516 光敏电阻、MPU6050 六轴、SG90 舵机、有源蜂鸣器。旋钮切换页面。
+**STM32F103 多传感器监测台**：0.96" OLED 显示、MAX30102 心率血氧、DHT11 温湿度、GL5516 光照、MPU6050 六轴、槽型光耦测速，外加 SG90 舵机与有源蜂鸣器，旋钮切页。
 代码按**驱动 / 界面 / 调度**分层，新增传感器或页面时不需要动已有模块。
 
 ## 文档
@@ -13,13 +13,13 @@
 ## 快速开始
 
 ```bash
-git clone https://github.com/<你的用户名>/stm32_hal_ssd1306.git
-cd stm32_hal_ssd1306
+git clone https://github.com/<你的用户名>/stm32-sensor-deck.git
+cd stm32-sensor-deck
 cmake --preset debug
 cmake --build build/debug/build
 ```
 
-烧录 `build/debug/build/stm32_hal_ssd1306.hex`，ST-Link 接 SWDIO/SWCLK/GND/3.3V 即可。
+烧录 `build/debug/build/stm32_sensor_deck.hex`，ST-Link 接 SWDIO/SWCLK/GND/3.3V 即可。
 
 ---
 
@@ -645,13 +645,17 @@ cmake --build build/debug/build
 
 | 文件 | 用途 |
 |---|---|
-| `stm32_hal_ssd1306.hex` | ST-Link Utility / CubeProgrammer 直接下载 |
-| `stm32_hal_ssd1306.bin` | 其他烧录工具 |
-| `stm32_hal_ssd1306.elf` | 调试 |
+| `stm32_sensor_deck.hex` | ST-Link Utility / CubeProgrammer 直接下载 |
+| `stm32_sensor_deck.bin` | 其他烧录工具 |
+| `stm32_sensor_deck.elf` | 调试 |
 
 当前占用：**Flash 约 37KB / 64KB，RAM 约 4.7KB / 20KB**。
 
 用 CubeIDE 打开时，`Core/Src` 下的新文件会被自动纳入编译，无需改工程。
+
+> CubeIDE 工程名（`.ioc` / `.cproject`）仍沿用 `stm32_hal_ssd1306`：CubeMX 会按 `.ioc` 里的
+> ProjectName 重新生成一堆文件，改名字容易把工程搞乱，所以只把「项目品牌」改成了 SensorDeck，
+> 芯片工程名保持不变。CMake 编译出来的产物已经是 `stm32_sensor_deck.hex/.bin/.elf`。
 
 > 光照模块的 ADC 是直接写寄存器的，**不需要**在 CubeMX 里勾选 ADC，也不用在
 > `stm32f1xx_hal_conf.h` 里打开 `HAL_ADC_MODULE_ENABLED`，重新生成代码不会影响它。
