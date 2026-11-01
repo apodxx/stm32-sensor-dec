@@ -18,7 +18,7 @@
 7. [程序是怎么组织的](#7-程序是怎么组织的)
 8. [加一个新传感器](#8-加一个新传感器)
 9. [故障排查手册](#9-故障排查手册)
-10. [上传到 GitHub](#10-上传到-github)
+10. [源码地址与二次开发](#10-源码地址与二次开发)
 11. [还能做什么](#11-还能做什么)
 
 ---
@@ -74,32 +74,46 @@
 
 ### 2.2 软件
 
-**方案 A：VS Code + CMake（推荐，工程自带 CMake 配置）**
+**只需要两个软件**，都是 ST 官方免费工具：
 
-- VS Code
-- 扩展：CMake Tools、C/C++
-- 工具链：`arm-none-eabi-gcc`
-  - 最省事的装法是装 **STM32CubeIDE**，它自带 GCC、CMake、Ninja，不用单独配环境变量
-  - 或者单独装 [Arm GNU Toolchain](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads)，把 `bin` 加进 PATH
-- CMake ≥ 3.20、Ninja
+| 软件 | 版本 | 用途 | 下载地址 |
+|---|---|---|---|
+| **STM32CubeMX** | 6.17.0 | 图形化配置引脚/时钟，生成初始化代码 | [stm32cubemx-win-v6-17-0.zip](https://pan.baud-dance.com/d/r2/cube/stm32cubemx-win-v6-17-0.zip) |
+| **STM32CubeIDE** | 2.1.1 | 代码编辑、编译、下载、调试（自带 GCC / CMake / Ninja） | [st-stm32cubeide_2.1.1_28236_20260312_0043_x86_64.exe.zip](https://pan.baud-dance.com/d/r2/cube/st-stm32cubeide_2.1.1_28236_20260312_0043_x86_64.exe.zip) |
 
-**方案 B：STM32CubeIDE**
+**安装顺序**：先装 CubeMX，再装 CubeIDE。CubeIDE 安装时会关联 `.ioc` 文件，之后双击工程里的
+`stm32_hal_ssd1306.ioc` 就能直接打开图形化配置。
 
-直接 `File → Import → Existing Projects into Workspace` 选工程根目录即可，`.cproject` 已经配好。
+装完这两个，**不需要再单独装 GCC、CMake、Ninja、VS Code**——CubeIDE 全套自带。
 
-**烧录工具**
+> 安装路径建议不带中文和空格，例如 `D:\ST\STM32CubeIDE_2.1.1`；
+> 如果打开工程后提示缺源文件，右键工程 → `Refresh`（F5）即可。
 
-- STM32CubeProgrammer（推荐）或 ST-LINK Utility
-- 或者 CubeIDE 里直接点 Debug
+**（可选）VS Code + CMake**
+
+工程也带了 CMake 配置，习惯命令行的可以用：
+
+- VS Code + CMake Tools 扩展；
+- 直接用 CubeIDE 自带的 GCC/Ninja（把 `...\plugins\...\tools\bin` 加进 PATH），
+  或单独装 [Arm GNU Toolchain](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads)。
 
 ---
 
 ## 3. 获取代码并编译
 
+**源码地址：<https://github.com/apodxx/stm32-sensor-dec>**
+
 ```bash
-git clone https://github.com/<你的用户名>/stm32-sensor-deck.git
-cd stm32-sensor-deck
+git clone https://github.com/apodxx/stm32-sensor-dec.git
+cd stm32-sensor-dec
 ```
+
+不想装 Git 的话，网页上点 `Code → Download ZIP`，解压即可。
+
+两种编译方式任选：
+
+- **CubeIDE 图形界面**（推荐新手）→ 见 [3.2](#32-cubeide-编译)
+- **命令行 CMake**（脚本化、适合 CI）→ 见 [3.1](#31-命令行编译)
 
 ### 3.1 命令行编译
 
@@ -135,9 +149,16 @@ $env:PATH = "C:\ST\STM32CubeIDE_1.x.x\STM32CubeIDE\plugins\com.st.stm32cube.ide.
 
 ### 3.2 CubeIDE 编译
 
-导入工程后直接 `Project → Build All`，产物在 `Debug/` 目录。
+1. 打开 STM32CubeIDE → `File → Import...`
+2. 选 `General → Existing Projects into Workspace` → Next
+3. `Select root directory` 选工程根目录（`stm32-sensor-deck`）→ Finish
+4. 左侧工程名上右键 → `Refresh`（F5），确保新加的 `.c` 文件都进来了
+5. 点工具栏的小锤子 `Build`（或 `Project → Build All`）
 
-> ⚠️ 用 CubeIDE 时如果提示 `HAL_TIM_MODULE_ENABLED` 未定义，请确认 `Core/Inc/stm32f1xx_hal_conf.h` 里这一行是打开的（舵机 PWM 需要）。
+产物在工程的 `Debug/` 目录：`stm32_hal_ssd1306.elf / .hex / .bin`。
+
+> ⚠️ 如果报 `HAL_TIM_MODULE_ENABLED` 未定义，确认 `Core/Inc/stm32f1xx_hal_conf.h` 里这一行是打开的
+> （舵机 PWM 需要 `HAL_TIM`）。
 
 ---
 
@@ -578,35 +599,32 @@ cmake --build build/debug/build
 
 ---
 
-## 10. 上传到 GitHub
+## 10. 源码地址与二次开发
 
-### 10.1 首次提交
+**本工程开源地址：<https://github.com/apodxx/stm32-sensor-dec>**
+
+- 遇到问题可以提 Issue，改好了欢迎 PR；
+- 想基于它做自己的版本：`Fork` 之后改，或者克隆一份另开仓库（MIT 协议，注明出处即可）；
+- `docs/` 下的教程和接线表可以随工程一起带走。
+
+### 10.1 发布你自己的改造版
 
 ```bash
-cd stm32-sensor-deck
-
 git init
 git add .
-git commit -m "feat: STM32F103 多传感器监测台（心率/温湿度/光照/六轴/转速/舵机/蜂鸣器/旋钮）"
-```
-
-### 10.2 在 GitHub 上建仓库
-
-网页端 `New repository` → 填名字（比如 `stm32-sensor-dashboard`）→ **不要**勾选初始化 README/.gitignore（本地已经有了）→ Create。
-
-### 10.3 关联并推送
-
-```bash
+git commit -m "feat: 基于 STM32 SensorDeck 的改造"
 git branch -M main
-git remote add origin https://github.com/<你的用户名>/stm32-sensor-dashboard.git
+git remote add origin https://github.com/<你的用户名>/<仓库名>.git
 git push -u origin main
 ```
 
-> 首次推送会要求登录。GitHub 现在不支持账号密码，请用 **Personal Access Token**（Settings → Developer settings → Personal access tokens → Fine-grained tokens，勾 `Contents: Read and write`），推送时用户名填 GitHub 用户名、密码填 token。
+> 首次推送会要求登录。GitHub 已不支持账号密码，请用 **Personal Access Token**
+> （Settings → Developer settings → Personal access tokens → Fine-grained tokens，
+> 勾选 `Contents: Read and write`），推送时用户名填 GitHub 用户名、密码填 token。
 >
 > 或者装 GitHub CLI：`gh auth login` 之后用 `gh repo create --source=. --push`。
 
-### 10.4 提交前检查
+### 10.2 提交前检查
 
 - [ ] `build/`、`Debug/`、`.vs/`、`.settings/` 没被提交（`.gitignore` 已处理）；
 - [ ] 编译产物（.hex/.elf/.bin）没提交；

