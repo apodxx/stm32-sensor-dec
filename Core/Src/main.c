@@ -34,6 +34,7 @@
 #include "mpu6050.h"
 #include "speed.h"
 #include "encoder.h"
+#include "link.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -60,6 +61,7 @@ static uint32_t lastEnvTick;   // 上次调用 DHT11 任务的时刻
 static uint32_t lastLightTick; // 上次调用光照采样任务的时刻
 static uint32_t lastMpuTick;   // 上次读 MPU6050 的时刻
 static uint32_t lastSpeedTick; // 上次处理测速窗口的时刻
+static uint32_t lastLinkTick;  // 上次解析串口命令的时刻
 static int16_t  lastDetent;    // 上次记录的旋钮档位
 #if SERVO_DEMO_SWEEP
 static uint32_t lastServoTick; // 舵机扫动节拍
@@ -137,6 +139,7 @@ int main(void)
   MPU6050_Init();    /* 六轴传感器，挂在 I2C1 上（0x68） */
   Speed_Init();      /* 测速模块（PB1 下降沿中断） */
   Encoder_Init();    /* 旋转编码器（PA5/PA6） */
+  Link_Init();       /* 与 ESP32 通信的 USART1（PA9/PA10） */
   UI_Init();         /* 界面从第一页开始 */
   /* USER CODE END 2 */
 
@@ -179,6 +182,13 @@ int main(void)
     {
       lastSpeedTick = now;
       Speed_Task();
+    }
+
+    /* 串口命令：5ms 解析一次（ESP32 / 上位机） */
+    if (now - lastLinkTick >= 5)
+    {
+      lastLinkTick = now;
+      Link_Task();
     }
 
     /* 旋钮切页：档位变化就切换界面（正转下一页、反转上一页） */

@@ -21,4 +21,5 @@ target_sources(${PROJECT_NAME} PRIVATE
     Core/Src/adc1.c
     Core/Src/knob.c
     Core/Src/encoder.c
+    Core/Src/link.c
 )
