@@ -205,6 +205,7 @@ ST-Link Utility / CubeProgrammer 打开 `stm32_sensor_deck.hex` → Connect → 
 | 蜂鸣器 | GPIO | PA2 | 有源，给电平就响 |
 | 测速模块 | EXTI | PB1 | 下降沿计数 |
 | 旋转编码器 | EXTI | PA5=A、PA6=B | C 接 GND |
+| ESP32-S3（小智 AI） | UART1 | PA9=TX、PA10=RX | 语音控制，见 [esp32-mcp.md](esp32-mcp.md) |
 | ST-Link | SWD | PA13/PA14 | |
 
 **电源注意**：
