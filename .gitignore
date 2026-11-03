@@ -31,3 +31,6 @@ desktop.ini
 !Drivers/**
 !cmake/**
 !docs/**
+
+# 第三方仓库（小智固件，单独 clone，不进本仓库）
+xiaozhi-esp32-main/

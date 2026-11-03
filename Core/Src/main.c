@@ -35,6 +35,7 @@
 #include "speed.h"
 #include "encoder.h"
 #include "link.h"
+#include "led.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -45,7 +46,7 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 #define SERVO_DEMO_SWEEP  1   /* 1 = 开机自动来回扫动；0 = 只保留接口，由你调用 */
-#define BUZZER_BEAT_SOUND 1   /* 1 = 每检测到一次心跳响一下；0 = 只做开机提示音 */
+#define BUZZER_BEAT_SOUND 0   /* 0 = 不再跟着心跳响；只在执行操作时响（见 link.c） */
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -126,13 +127,7 @@ int main(void)
   Servo_Init();      /* 舵机 PWM（PA1 / TIM2_CH2），上电回中位 */
   Buzzer_Init();     /* 蜂鸣器（PA2） */
 
-  /* 开机提示音：响两声，确认蜂鸣器接对了 */
-  Buzzer_On();
-  HAL_Delay(80);
-  Buzzer_Off();
-  HAL_Delay(80);
-  Buzzer_On();
-  HAL_Delay(80);
+  /* 开机不再响：按需求，只有转旋钮时才响一下 */
   Buzzer_Off();
 
   MAX30102_Init();   /* 心率血氧，失败也没关系：Process() 会每秒自动重连 */
@@ -140,6 +135,7 @@ int main(void)
   Speed_Init();      /* 测速模块（PB1 下降沿中断） */
   Encoder_Init();    /* 旋转编码器（PA5/PA6） */
   Link_Init();       /* 与 ESP32 通信的 USART1（PA9/PA10） */
+  Led_Init();        /* 控制灯（PA4），默认熄灭 */
   UI_Init();         /* 界面从第一页开始 */
   /* USER CODE END 2 */
 
@@ -203,6 +199,7 @@ int main(void)
         while (p < 0)
           p += UI_PAGE_COUNT;
         UI_SetPage((UI_Page)(p % UI_PAGE_COUNT));
+        Buzzer_Beep(30); /* 只有转旋钮才响一下（“咔哒”手感） */
       }
     }
 

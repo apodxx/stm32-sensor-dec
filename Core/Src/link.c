@@ -1,4 +1,4 @@
-/**
+	/**
  * @file link.c
  * @brief 与 ESP32（小智 AI）通信的串口命令通道
  *
@@ -31,6 +31,7 @@
 #include "mpu6050.h"
 #include "speed.h"
 #include "buzzer.h"
+#include "led.h"
 #include "ui.h"
 #include <string.h>
 
@@ -321,6 +322,32 @@ static void HandleLine(char *cmd)
 
     Buzzer_Beep((uint16_t)ms);
     Link_SendLine("OK");
+  }
+  else if (strcmp(cmd, "LED ON") == 0)
+  {
+    Led_Set(1);
+    Link_SendLine("OK LED=1");
+  }
+  else if (strcmp(cmd, "LED OFF") == 0)
+  {
+    Led_Set(0);
+    Link_SendLine("OK LED=0");
+  }
+  else if (strcmp(cmd, "LED TOGGLE") == 0)
+  {
+    Led_Toggle();
+
+    txReset();
+    txStr("OK LED=");
+    txInt(Led_Get());
+    txSend();
+  }
+  else if (strcmp(cmd, "GET LED") == 0)
+  {
+    txReset();
+    txStr("LED=");
+    txInt(Led_Get());
+    txSend();
   }
   else
   {
