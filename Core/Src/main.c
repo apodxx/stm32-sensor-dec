@@ -45,7 +45,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define SERVO_DEMO_SWEEP  1   /* 1 = 开机自动来回扫动；0 = 只保留接口，由你调用 */
+#define SERVO_DEMO_SWEEP  0   /* 1 = 开机自动来回扫动；0 = 只保留接口，由你调用 */
 #define BUZZER_BEAT_SOUND 0   /* 0 = 不再跟着心跳响；只在执行操作时响（见 link.c） */
 /* USER CODE END PD */
 

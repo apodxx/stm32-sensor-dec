@@ -32,6 +32,7 @@
 #include "speed.h"
 #include "buzzer.h"
 #include "led.h"
+#include "servo.h"
 #include "ui.h"
 #include <string.h>
 
@@ -347,6 +348,38 @@ static void HandleLine(char *cmd)
     txReset();
     txStr("LED=");
     txInt(Led_Get());
+    txSend();
+  }
+  else if (strcmp(cmd, "GATE OPEN") == 0)
+  {
+    Servo_SetAngle(90); /* 开闸门：转 90° */
+    Buzzer_Beep(60);    /* 动作执行，响一下 */
+    Link_SendLine("OK Gate=open");
+  }
+  else if (strcmp(cmd, "GATE CLOSE") == 0)
+  {
+    Servo_SetAngle(0); /* 关闸门：回 0° */
+    Buzzer_Beep(60);
+    Link_SendLine("OK Gate=closed");
+  }
+  else if (strncmp(cmd, "SERVO ", 6) == 0)
+  {
+    int32_t deg = 0;
+    const char *s = cmd + 6;
+
+    while (*s == ' ')
+      s++;
+    while (*s >= '0' && *s <= '9')
+      deg = deg * 10 + (*s++ - '0');
+
+    if (deg > 180)
+      deg = 180;
+
+    Servo_SetAngle((uint8_t)deg);
+
+    txReset();
+    txStr("OK Servo=");
+    txInt(deg);
     txSend();
   }
   else
